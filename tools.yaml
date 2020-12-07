@@ -1,0 +1,19 @@
+monitoring:
+    flows: 
+    -  tool: sflow
+       architecture: agents-collector
+    latency: 
+    -  tool: ping
+       architecture: standalone
+    -  tool: perfsonar
+       architecture: client-server
+
+administration:
+    network:
+    -   tool: netconf
+        architecture: agents-collector
+
+security:
+    firewall: 
+    -  tool: iptables
+       architecture: standalone

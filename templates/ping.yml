@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+pod: share
+spec:
+  template:
+    spec:
+      containers:
+      - name: ping
+        image: willfarrell/ping

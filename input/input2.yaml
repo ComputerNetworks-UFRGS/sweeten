@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iq-deployment
+  labels:
+    app: iq
+  management:
+    monitoring:
+      - flows
+      - latency
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iq
+  template:
+    metadata:
+      labels:
+        app: iq
+    spec:
+      containers:
+      - name: sv-iq
+        image: networkstatic/iperf3
+        args: ['-s']
+        ports:
+        - containerPort: 5201
+          name: sv-iq
+      - name: cl-iq
+        image: networkstatic/iperf3
+        command: ['/bin/sh', '-c', 'sleep infinity']
+        # To benchmark manually: kubectl exec iperf3-clients-jlfxq -- /bin/sh -c 'iperf3 -c iperf3-server'
+      terminationGracePeriodSeconds: 0
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sv-iq
+spec:
+  selector:
+    app: iq
+  ports:
+  - protocol: TCP
+    port: 5201
+    targetPort: 5201
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subframe-deployment
+  labels:
+    app: subframe
+  management:
+    monitoring:
+      - flows
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subframe
+  template:
+    metadata:
+      labels:
+        app: subframe
+    spec:
+      containers:
+      - name: sv-subframe
+        image: networkstatic/iperf3
+        args: ['-s']
+        ports:
+        - containerPort: 5201
+          name: sv-subframe20
+      - name: cl-subframe
+        image: networkstatic/iperf3
+        command: ['/bin/sh', '-c', 'sleep infinity']
+      terminationGracePeriodSeconds: 0
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sv-subframe
+spec:
+  selector:
+    app: subframe
+  ports:
+  - protocol: TCP
+    port: 5202
+    targetPort: 5201

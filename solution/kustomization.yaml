@@ -1,0 +1,3 @@
+resources:
+  - partialOutput.yaml
+  - augmentedOutput.yaml

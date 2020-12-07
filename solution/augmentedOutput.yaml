@@ -1,0 +1,150 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sflow-rt-sflow
+spec:
+  ports:
+  - port: 6343
+    protocol: UDP
+  selector:
+    name: sflow-rt
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sflow-rt-rest
+spec:
+  ports:
+  - port: 8008
+    protocol: TCP
+  selector:
+    name: sflow-rt
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sflow-rt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: sflow-rt
+  template:
+    metadata:
+      labels:
+        name: sflow-rt
+    spec:
+      containers:
+      - image: sflow/prometheus:latest
+        name: sflow-rt
+        ports:
+        - containerPort: 8008
+          name: http
+          protocol: TCP
+        - containerPort: 6343
+          name: sflow
+          protocol: UDP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: iq
+  name: iq-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iq
+  template:
+    metadata:
+      labels:
+        app: iq
+    spec:
+      containers:
+      - args:
+        - -s
+        image: networkstatic/iperf3
+        name: sv-iq
+        ports:
+        - containerPort: 5201
+          name: sv-iq
+      - command:
+        - /bin/sh
+        - -c
+        - sleep infinity
+        image: networkstatic/iperf3
+        name: cl-iq
+      - env:
+        - name: COLLECTOR
+          value: sflow-rt-sflow
+        - name: SAMPLING
+          value: '5'
+        - name: NET
+          value: flannel
+        - name: other-option
+          value: test
+        - name: metric
+          value: bytes_in
+        image: sflow/host-sflow:latest
+        name: host-sflow
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: docker-sock
+          readOnly: true
+      terminationGracePeriodSeconds: 0
+      volumes:
+      - hostPath:
+          path: /var/run/docker.sock
+        name: docker-sock
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: subframe
+  name: subframe-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subframe
+  template:
+    metadata:
+      labels:
+        app: subframe
+    spec:
+      containers:
+      - args:
+        - -s
+        image: networkstatic/iperf3
+        name: sv-subframe
+        ports:
+        - containerPort: 5201
+          name: sv-subframe
+      - command:
+        - /bin/sh
+        - -c
+        - sleep infinity
+        image: networkstatic/iperf3
+        name: cl-subframe
+      - env:
+        - name: COLLECTOR
+          value: sflow-rt-sflow
+        - name: SAMPLING
+          value: '10'
+        - name: NET
+          value: flannel
+        image: sflow/host-sflow:latest
+        name: host-sflow
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: docker-sock
+          readOnly: true
+      terminationGracePeriodSeconds: 0
+      volumes:
+      - hostPath:
+          path: /var/run/docker.sock
+        name: docker-sock
