@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
 import logging, sys
-import yaml
-import io
-from ftaquir import aquire_features
-from toolmapper import map_tools
-from templatemapper import map_templates
-from deployer import deploy
-import subprocess
+from components.ftaquir import aquire_features
+from components.toolmapper import map_tools
+from components.templatemapper import map_templates
+from components.deployer import deploy
 
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import yaml
-import itertools
+# import itertools
 
 def map_tools(featuresMapping, featuresOptions):
     toolsMapping = {}
@@ -16,7 +16,7 @@ def map_tools(featuresMapping, featuresOptions):
                 toolsMapping[tool["tool"]] = []
                 toolsOptions[tool["tool"]] = []
                 toolsArchs[tool["tool"]] = tool["architecture"]
-            for target, options in itertools.izip(featuresMapping[discipline][feature],featuresOptions[discipline][feature]):
+            for target, options in zip(featuresMapping[discipline][feature],featuresOptions[discipline][feature]):
                 toolsMapping[tool["tool"]].append(target)
                 toolsOptions[tool["tool"]].append(options)
     return toolsMapping, toolsArchs, toolsOptions
@@ -27,14 +27,14 @@ def feature_to_tool(discipline, feature, featureOptions, toolsCatalogue):
     return toolsCatalogue[discipline][feature][0]
 
 def load_tools_catalogue():
-    with open("tools.yaml", 'r') as stream:
+    with open("tools_catalogue.yaml", 'r') as stream:
         try:
             toolsCatalogue = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
-            print "Error loading the Tools Catalogue"
+            print("Error loading the Tools Catalogue")
             print(exc)
         return toolsCatalogue
 
-def get_tool_architecture(tool):
-    toolsCatalogue = load_tools_catalogue()
-    print toolsCatalogue[discipline][feature][0]
+# def get_tool_architecture(tool):
+#     toolsCatalogue = load_tools_catalogue()
+#     print(toolsCatalogue[discipline][feature][0])

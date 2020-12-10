@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import yaml
 import io
-import itertools
+#import itertools
 import copy
 
 def map_templates(toolsMapping, toolsArchs, toolsOptions, featuresTargets):
@@ -26,10 +26,10 @@ def map_templates(toolsMapping, toolsArchs, toolsOptions, featuresTargets):
 
                     if toolsArchs[tool] == "agents-collector":
                         if podRole == "collector":
-                            print "Collector for " + tool + " unchanged..." #collector won't be changed as is
+                            print("Collector for " + tool + " unchanged...") #collector won't be changed as is
 
                         elif podRole == "agent":
-                            for featRequester, optionsRequested in itertools.izip(toolsMapping[tool],toolsOptions[tool]):
+                            for featRequester, optionsRequested in zip(toolsMapping[tool],toolsOptions[tool]):
                                 for target in featuresTargets:
                                     if target["metadata"]["name"] == featRequester:
                                         if podSharing == "share":
@@ -38,14 +38,14 @@ def map_templates(toolsMapping, toolsArchs, toolsOptions, featuresTargets):
 
                     #TODO
                     elif toolsArchs[tool] == "client-server":
-                        print "#TODO"
+                        print("#TODO")
                     #TODO
                     elif toolsArchs[tool] == "standalone":
-                        print "#TODO"
+                        print("#TODO")
 
                     else:
-                        print toolsArchs[tool]
-                        print "Error mapping " + tool + "'s architecture!"
+                        print(toolsArchs[tool])
+                        print("Error mapping " + tool + "'s architecture!")
 
                     if podSharing == "new":
                         augmentedOutputYaml.append(doc)
@@ -91,13 +91,13 @@ def augment_doc(original, increment, options):
             augment_doc(original[tag], increment[tag], options)
 
         elif isinstance(increment[tag], list):
-            print "is a list"
+            print("is a list")
             if tag not in original:
-                print "a new one"
+                print("a new one")
  #               original[tag] = increment[tag]
             else:
-                print "not a new one"
+                print("not a new one")
                 original[tag].extend(increment[tag])
 
         else:       
-            print "Error augmenting..."
+            print("Error augmenting...")
