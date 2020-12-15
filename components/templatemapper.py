@@ -41,7 +41,14 @@ def map_templates(toolsMapping, toolsArchs, toolsOptions, featuresTargets):
                         print("#TODO")
                     #TODO
                     elif toolsArchs[tool] == "standalone":
-                        print("#TODO")
+                        #logic from agents in agents-collector architecture. To be refactored
+                        for featRequester, optionsRequested in zip(toolsMapping[tool], toolsOptions[tool]):
+                            for target in featuresTargets:
+                                if target["metadata"]["name"] == featRequester:
+                                    if podSharing == "share":
+                                        target = add_from_tag("containers", target, copy.deepcopy(doc),
+                                                              optionsRequested)
+                                        target = add_from_tag("volumes", target, copy.deepcopy(doc), optionsRequested)
 
                     else:
                         print(toolsArchs[tool])
@@ -81,7 +88,7 @@ def add_from_tag(tag, original, increment, options):
     original["spec"]["template"]["spec"][tag].extend(increment["spec"]["template"]["spec"][tag])
     return original
 
-# TODO recursive function to augment the original doc with the template/tool specification
+# TODO maybe later to replace logic with a recursive function to augment the original doc with the template/tool specification
 def augment_doc(original, increment, options):
     for tag, value in increment.items():
         if tag not in original:

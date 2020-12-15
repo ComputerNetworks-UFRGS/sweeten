@@ -34,7 +34,3 @@ def load_tools_catalogue():
             print("Error loading the Tools Catalogue")
             print(exc)
         return toolsCatalogue
-
-# def get_tool_architecture(tool):
-#     toolsCatalogue = load_tools_catalogue()
-#     print(toolsCatalogue[discipline][feature][0])
