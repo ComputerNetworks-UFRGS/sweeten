@@ -1,6 +1,6 @@
-#output after cmd:
+#configmap from
 #kubectl create configmap nginx-config --from-file=./nginx.conf --from-file=./ssl.crt --from-file=./ssl.key --from-file=./ssl.csr
-#from cmd:
+#output from
 #kubectl get configmaps nginx-config -o yaml > configmap-nginx-config.yaml
 apiVersion: v1
 data:
