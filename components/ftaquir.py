@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import yaml
+import imgtagger
 
 #Start by parsing the compose file with user's deployments/services/etc, and aquire desired management features annotations
 
@@ -8,6 +9,7 @@ def aquire_features(inputYaml):
     featuresMapping = {} # maps what features are required, and by what deployments/docs (by name)
     featuresOptions = {} # maps options requested by each service, for each feature (this all could use a dif data structure, mb a tree)
     featuresTargets = [] # targets/docs that have features required (mgmt tags already removed)
+    featuresTags = [] # To add tags based on container image description that can help deciding which solution/configuration to deploy
     partialOutputYaml = [] # input that does not require management features (copied to output, thus)
 
     with open(inputYaml) as f:    
@@ -34,6 +36,7 @@ def aquire_features(inputYaml):
                     #create target list for the docs minus the management annotations
                     del doc["metadata"]["management"]
                     featuresTargets.append(doc)
+                    featuresTags.append(imgtagger.addTagsToContainerImage(doc["spec"]["spec"]["image"]))
                 else:
 #                    print "THIS IS A DOC THAT DOES NOT(!) REQUEST ANY MANAGEMENT FEATURE (i.e., is copied directly to output yaml):"
                     partialOutputYaml.append(doc)

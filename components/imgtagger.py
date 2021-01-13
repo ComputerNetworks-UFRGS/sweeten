@@ -28,15 +28,17 @@ def pullInfoFromDocker(imageName):
                 #print("No default image description available")
         return dockerImage, imageTagsReadDict, imageDescription
 
-imageName = "eclipse-mosquitto"
-#imageName = "sflow/prometheus"
+def addTagsToContainerImage(imageName):
+        dockerImage, imageDefaultTags, imageDefaultDescription = pullInfoFromDocker(imageName)
+        enrichedDescription = enrichedDescriptionFromGoogle(imageName)
 
-dockerImage, imageDefaultTags, imageDefaultDescription = pullInfoFromDocker(imageName)
-enrichedDescription = enrichedDescriptionFromGoogle(imageName)
+        print("Docker image name: " + imageName)
+        print("Image original tags: ", end="")
+        for tag in imageDefaultTags:
+                print(tag)
+        print("Image original description: " + imageDefaultDescription)
+        print("Enriched description: " + enrichedDescription)
 
-print("Docker image name: " + imageName)
-print("Image original tags: ", end="")
-for tag in imageDefaultTags:
-        print(tag)
-print("Image original description: " + imageDefaultDescription)
-print("Enriched description: " + enrichedDescription)
+
+# imageName = "eclipse-mosquitto"
+# addTagsToContainerImage(imageName)
