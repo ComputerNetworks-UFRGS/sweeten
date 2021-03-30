@@ -43,4 +43,4 @@ def aquire_features(inputYaml):
 #                print doc
 #                print "!+_+!#_+!_#+!_#+!_#+!_#+!_#+!_"
 
-    return featuresMapping, featuresOptions, featuresTargets, partialOutputYaml
+    return featuresMapping, featuresOptions, featuresTargets, featuresTags, partialOutputYaml

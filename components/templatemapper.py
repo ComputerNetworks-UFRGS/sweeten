@@ -4,7 +4,8 @@ import io
 #import itertools
 import copy
 
-def map_templates(toolsMapping, toolsArchs, toolsOptions, featuresTargets):
+
+def map_templates(toolsMapping, toolsArchs, toolsOptions, featuresTags, featuresTargets):
     augmentedOutputYaml = []
     outputs = []
     for tool in toolsMapping:
@@ -61,6 +62,7 @@ def map_templates(toolsMapping, toolsArchs, toolsOptions, featuresTargets):
         augmentedOutputYaml.append(target)
     return augmentedOutputYaml, outputs
 
+
 def output_from_service(svcdoc, output, toolOptions):
     result = {}
     result["svcName"] = svcdoc["metadata"]["name"]
@@ -71,6 +73,7 @@ def output_from_service(svcdoc, output, toolOptions):
             result["metric"] = option["metric"]
     result["path"] = output["path"].replace("$metric", result["metric"])
     return result
+
 
 def add_from_tag(tag, original, increment, options):
     if tag not in original["spec"]["template"]["spec"]:
@@ -88,7 +91,7 @@ def add_from_tag(tag, original, increment, options):
     original["spec"]["template"]["spec"][tag].extend(increment["spec"]["template"]["spec"][tag])
     return original
 
-# TODO maybe later to replace logic with a recursive function to augment the original doc with the template/tool specification
+
 def augment_doc(original, increment, options):
     for tag, value in increment.items():
         if tag not in original:
