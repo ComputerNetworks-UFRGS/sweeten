@@ -31,7 +31,7 @@ def feature_to_tool(discipline, feature, featureOptions, featureTags, toolsCatal
                 return tool[0]
 
 def load_tools_catalogue():
-    with open("tools_catalogue.yaml", 'r') as stream:
+    with open("components/tools.yaml", 'r') as stream:
         try:
             toolsCatalogue = yaml.safe_load(stream)
         except yaml.YAMLError as exc:

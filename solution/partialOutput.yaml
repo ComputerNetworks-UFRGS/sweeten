@@ -1,23 +1,71 @@
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: sv-iq
+  name: hello-kubernetes-plain
 spec:
-  ports:
-  - port: 5201
-    protocol: TCP
-    targetPort: 5201
+  replicas: 1
   selector:
-    app: iq
+    matchLabels:
+      app: hello-kubernetes-plain
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes-plain
+    spec:
+      containers:
+      - env:
+        - name: PORT
+          value: '800'
+        image: gcr.io/google-samples/node-hello:1.0
+        name: hello-kubernetes-plain
+        ports:
+        - containerPort: 800
+          protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sv-subframe
+  name: hello-kubernetes-plain
 spec:
   ports:
-  - port: 5202
-    protocol: TCP
-    targetPort: 5201
+  - port: 800
+    targetPort: 800
   selector:
-    app: subframe
+    app: hello-kubernetes-plain
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes-plain-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-kubernetes-plain-2
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes-plain-2
+    spec:
+      containers:
+      - env:
+        - name: PORT
+          value: '800'
+        image: gcr.io/google-samples/node-hello:1.0
+        name: hello-kubernetes-plain-2
+        ports:
+        - containerPort: 800
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-kubernetes-plain-2
+spec:
+  ports:
+  - port: 800
+    targetPort: 800
+  selector:
+    app: hello-kubernetes-plain-2
+  type: NodePort

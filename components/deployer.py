@@ -9,17 +9,17 @@ import shutil
 
 def deploy(partialOutputYaml, augmentedOutputYaml, outputs):
     # Write YAML file for unchanged input docs
-    with open("../solution/partialOutput.yaml", "w") as stream:
+    with open("solution/partialOutput.yaml", "w") as stream:
         yaml.dump_all(partialOutputYaml, stream, default_flow_style=False)
 
     # Write YAML file for augmented docs
-    with open("../solution/augmentedOutput.yaml", "w") as stream:
+    with open("solution/augmentedOutput.yaml", "w") as stream:
         yaml.dump_all(augmentedOutputYaml, stream, default_flow_style=False)
 
     # Copy YAML kustomization file to trigger the deployment from both YAML files
-    shutil.copy2('../templates/kustomization.yaml', 'solution/')
+    shutil.copy2('templates/kustomization.yaml', 'solution/')
 
-#    return 0
+    return 0
     #Launch kubectl to deploy solution
     bashCommand = "kubectl apply -k solution/"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='./')

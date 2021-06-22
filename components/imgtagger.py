@@ -31,7 +31,7 @@ def addTagsToContainerImage(imageName):
     dockerImage, imageDefaultTags, imageDefaultDescription = get_container_info_from_docker(imageName)
     enrichedDescription = get_enriched_description(imageName)
 
-    with open('../input/descriptions.txt') as f:
+    with open('input/descriptions.txt') as f:
         docs = f.readlines()
 
     for i, doc in enumerate(docs[:-1]):

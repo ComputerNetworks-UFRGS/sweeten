@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes-plain2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-kubernetes-plain2
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes-plain2
+    spec:
+      containers:
+      - name: hello-kubernetes-plain2
+#        image: paulbouwer/hello-kubernetes:1.8
+        image: gcr.io/google-samples/node-hello:1.0
+        ports:
+        - containerPort: 800
+          protocol: TCP
+        env:
+          - name: PORT
+            value: "802"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-kubernetes-plain2
+spec:
+  type: NodePort
+  ports:
+  - port: 802
+    targetPort: 802
+  selector:
+    app: hello-kubernetes-plain2
